@@ -146,7 +146,7 @@ final class Util extends Object{
 	 * @param String $className
 	 * @param String $objectfile
 	 */
-	public static function getObject(&$object,$className,$classFile){
+	public static function getObject(&$object, $className, $classFile){
 		if (!class_exists($className)){
 			if (!is_file($classFile)){
 				trigger_error("file $classFile was not found",E_USER_ERROR);
@@ -164,11 +164,11 @@ final class Util extends Object{
 	 *
 	 *
 	 */
-	public static function &getAction($action){
+	public static function getAction($action){
 		$classFile =  ROOTPATH . MODULEPATH . ACTIONPATH . "/$action.action.php";
 		$actionClassName = ucfirst($action) . 'Action';
 		$actionObject = null;
-		self::getObject(&$actionObject,$actionClassName,$classFile);
+		self::getObject($actionObject, $actionClassName, $classFile);
 
 		if (!$actionObject->getObject() instanceof AbstractAction) {
 			trigger_error("$module $actionClassName was not a subclass of AbstractAction", E_USER_ERROR);
@@ -182,7 +182,7 @@ final class Util extends Object{
 	 * @param boolean $isNew
 	 * @param boolean $noModule
 	 */
-	public static function &getModel($model,$isNew = false,$noModule = false) {
+	public static function getModel($model, $isNew = false, $noModule = false) {
 		
 		$modelHash = md5($model);
 		 
@@ -196,7 +196,7 @@ final class Util extends Object{
 			$modelClassName = ucfirst($model) . "Model";
 
 			$modelObject = null;
-			self::getObject(&$modelObject,$modelClassName,$classFile);
+			self::getObject($modelObject, $modelClassName, $classFile);
 			
 			if (!$modelObject->getObject() instanceof Model)
 				trigger_error("$modelClassName was not a subclass of Model",E_USER_ERROR);
@@ -205,7 +205,7 @@ final class Util extends Object{
 				return $modelObject;
 			}
 				
-			self::$models[$modelHash] = &$modelObject;
+			self::$models[$modelHash] = $modelObject;
 		}
 		
 		return self::$models[$modelHash];
@@ -215,7 +215,7 @@ final class Util extends Object{
 	/**
 	 * 
 	 */
-	public static function &getView() {
+	public static function getView() {
 		if (!isset(self::$view)) {
  	
 			if (defined('VIEWFILE')){
@@ -228,7 +228,7 @@ final class Util extends Object{
 			
 			$viewClassName = ucfirst($view);
 			
-			self::getObject(&self::$view,$viewClassName,$pathParts['dirname'] . '/' . $pathParts['basename']);
+			self::getObject(self::$view, $viewClassName, $pathParts['dirname'] . '/' . $pathParts['basename']);
 			
 			if (!self::$view->getObject() instanceof View)
 				trigger_error("$viewClassName was not a subclass of View",E_USER_ERROR);
@@ -240,9 +240,9 @@ final class Util extends Object{
 	/**
 	*
 	*/
-	public static function &getCache(){
+	public static function getCache(){
 		if (!isset(self::$cache)) {
-			self::getObject(&self::$cache,CACHEOBJ,"");
+			self::getObject(self::$cache, CACHEOBJ, "");
 		}
 		return self::$cache;
 	}
@@ -255,7 +255,7 @@ final class Util extends Object{
 	    $link = $pageInfo['link'];
 	    if (empty($link)){
 	        $uri = $_SERVER['REQUEST_URI'];
-		    if ($_SERVER['QUERY_STRING']){
+		    if (stripos($uri, '?')){
 			    if (stripos($uri, 'page=')){
 				    $uri = preg_replace("/page=\d+/i", 'page=?', $uri);
  			    } else {
@@ -267,20 +267,17 @@ final class Util extends Object{
             $link = $uri;
 	    }
 	    
-	    
 	    $pages = ceil($record / $pageCount);
-	    
-	     
+
 	    $prePage = $page - 1;
 	    
 	    $nextPage = $page + 1;
 	    
 	    if ($prePage >= 0)
-	        $prePageLink = str_replace('page=?','page='.($prePage+1), $link);
-	        
-	        
+	        $prePageLink = str_replace('page=?','page='.$prePage, $link);
+	
 	    if ($nextPage < $pages)
-	        $nextPageLink = str_replace('page=?','page='.($nextPage+1), $link);
+	        $nextPageLink = str_replace('page=?','page='.$nextPage, $link);
 	        
         $firstPageLink = str_replace('page=?',"page=1", $link);
 	    $lastPageLink = str_replace('page=?',"page=$pages", $link);
@@ -314,7 +311,7 @@ final class Util extends Object{
 	public static function addslashesArray($a){
         if(is_array($a)){
             foreach($a as $n=>$v){
-                $b[$n]=addslashes_array($v);
+                $b[$n]=Util :: addslashes_array($v);
             }
             return $b;
         }else{

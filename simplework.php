@@ -177,7 +177,7 @@ class Simplework extends Object {
 			if (!isset ($sessionArr['class']) || !isset ($sessionArr['file'])) {
 				trigger_error('session config error:must have class and file', E_USER_ERROR);
 			}
-			Util :: getObject(& $session, $sessionArr['class'], $sessionArr['file']);
+			Util :: getObject($session, $sessionArr['class'], $sessionArr['file']);
 			$timeOut = (int)$sessionArr['timeout'];
 			$session->setMaxLifeTime($timeOut>0?$timeOut:30*1000);
 			session_set_save_handler(array (& $session, 'open'), 
@@ -312,7 +312,7 @@ class Simplework extends Object {
 			 */
 			if (isset ($globalInterceptors)) {
 				foreach ($globalInterceptors as $interceptor) {
-					if($this->interceptor($interceptorPath,$interceptor,&$module, &$action, &$method) === false){
+					if($this->interceptor($interceptorPath, $interceptor, $module, $action, $method) === false){
 						return false;
 					};
 				}
@@ -324,7 +324,7 @@ class Simplework extends Object {
 			if (isset ($actionInterceptors)) {
 				$interceptor = $actionInterceptors[$action];
 				if (isset ($interceptor)) {
-					if($this->interceptor($interceptorPath,$interceptor,&$module, &$action, &$method) === false){
+					if($this->interceptor($interceptorPath, $interceptor, $module, $action, $method) === false){
 						return false;
 					};
 
@@ -333,7 +333,7 @@ class Simplework extends Object {
 		}
 
 		
-		$actionObject = &Util :: getAction($action);
+		$actionObject = Util :: getAction($action);
 		$actionObject->isPOST = strtoupper($_SERVER['REQUEST_METHOD']) == 'POST';
 		$actionObject->isAjax = array_key_exists('ajax', $_REQUEST);
 		
@@ -373,11 +373,11 @@ class Simplework extends Object {
 			}
 			$interceptorClassName = ucfirst($interceptor) . 'Intercepto';
 			$interceptorObject = null;
-			Util :: getObject(& $interceptorObject, $interceptorClassName, $interceptorfile);
+			Util :: getObject($interceptorObject, $interceptorClassName, $interceptorfile);
 			if (!$interceptorObject->getObject() instanceof Interceptor) {
 				trigger_error("$interceptorClassName was not a subclass of Interceptor", E_USER_ERROR);
 			}
-			if ($interceptorObject->doInterceptor(&$module, &$action, &$method) === Interceptor :: INTERCEPT) {
+			if ($interceptorObject->doInterceptor($module, $action, $method) === Interceptor :: INTERCEPT) {
 				return false;
 			}
 			return true;

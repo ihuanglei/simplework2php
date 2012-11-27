@@ -54,7 +54,7 @@ class AOPResolve extends Object {
 				$aspectfile = ROOTPATH . ASPECTPATH . "/$aspect.aspect.php";			
 				$aspectClassName = ucfirst($aspect) . 'Aspect';
 				$aspectObject = null;
-				Util :: getObject($aspectObject,$aspectClassName,$aspectfile);
+				Util :: getObject($aspectObject, $aspectClassName, $aspectfile);
 				if (!$aspectObject->getObject() instanceof Aspect) {
 					trigger_error("$aspectClassName was not a subclass of Aspect", E_USER_ERROR);
 				}

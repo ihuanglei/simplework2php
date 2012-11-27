@@ -19,7 +19,7 @@ abstract class DBModel extends Model {
 
 	abstract protected function update($fields, $condition);
 
-	abstract protected function & getDb();
+	abstract protected function getDb();
 
 	abstract protected function getTable();
 

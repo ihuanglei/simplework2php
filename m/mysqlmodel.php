@@ -74,7 +74,7 @@ abstract class AbstractMysqlModel extends DBModel {
 		return $this->getDb()->multi_query($sql);
 	}
 
-	protected function & getDb() {
+	protected function getDb() {
 		if (!isset (self::$db)) {
 			self::$db = new Mysql();
 			self::$db->connect(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME, DB_CHARSET);

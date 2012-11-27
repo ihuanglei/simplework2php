@@ -36,13 +36,13 @@ abstract class AbstractAction extends Object {
 	 * @access 
 	 * @var unknown
 	 */
-	protected function & getModel($model, $isNew = false, $noModule = false) {
+	protected function getModel($model, $isNew = false, $noModule = false) {
 		return Util :: getModel($model, $isNew, $noModule);
 	}
 
 	/**
 	*/
-	protected function & getView() {
+	protected function getView() {
 		return Util :: getView();
 	}
 	
