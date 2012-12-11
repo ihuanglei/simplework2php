@@ -33,7 +33,14 @@ class VView extends Object implements View{
 	 * 显示模板
 	 */
 	public function display($d){
-		echo $this->template->output(ROOTPATH . MODULEPATH . 'template/',$d);
+		$dir = '';
+		$file = $d;
+		$pos = strrpos($d,'/');
+		if ($pos !== false){
+			$dir = substr($d,0,$pos + 1);
+			$file = substr($d,$pos + 1);
+		}
+		echo $this->template->output(ROOTPATH . MODULEPATH . "template/$dir",$file);
 	}
 	
 } 
