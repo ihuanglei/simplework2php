@@ -179,13 +179,13 @@ class Simplework extends Object {
 			}
 			Util :: getObject($session, $sessionArr['class'], $sessionArr['file']);
 			$timeOut = (int)$sessionArr['timeout'];
-			$session->setMaxLifeTime($timeOut>0?$timeOut:30*1000);
-			session_set_save_handler(array (& $session, 'open'), 
-									 array (& $session,'close'), 
-									 array (& $session,'read'), 
-									 array (& $session,'write'), 
-									 array (& $session,'destroy'), 
-									 array (& $session,'gc')
+			$session->getObject()->setMaxLifeTime($timeOut>0?$timeOut:30*1000);
+			session_set_save_handler(array ($session->getObject(), 'open'), 
+									 array ($session->getObject(),'close'), 
+									 array ($session->getObject(),'read'), 
+									 array ($session->getObject(),'write'), 
+									 array ($session->getObject(),'destroy'), 
+									 array ($session->getObject(),'gc')
 									 );
 			register_shutdown_function('session_write_close');
 		}
@@ -377,7 +377,7 @@ class Simplework extends Object {
 			if (!$interceptorObject->getObject() instanceof Interceptor) {
 				trigger_error("$interceptorClassName was not a subclass of Interceptor", E_USER_ERROR);
 			}
-			if ($interceptorObject->doInterceptor($module, $action, $method) === Interceptor :: INTERCEPT) {
+			if ($interceptorObject->getObject()->doInterceptor($module, $action, $method) === Interceptor :: INTERCEPT) {
 				return false;
 			}
 			return true;

@@ -42,7 +42,7 @@ class AOPResolve extends Object {
 	private static $aspects = array();
 
 	public static function load() {
-		$aspectMapPath = ROOTPATH . ASPECTPATH . '/aspectMap.php';
+		$aspectMapPath = ROOTPATH . ASPECTPATH . '/aspectmap.php';
 		if (is_file($aspectMapPath)) {
 			require_once ($aspectMapPath);
 			if (!function_exists(getAspectMap)) {
@@ -69,14 +69,14 @@ class AOPResolve extends Object {
 	}
 
 
-	public static function execute($stage,$c,$m,$a){
+	public static function execute($stage,$c,$m,$a,$r=false){
 		foreach(self :: $aspects as $aspect) {
 			if (preg_match($aspect['c'],$c)){
 				if (preg_match($aspect['m'],$m)){
 					if ($stage === self :: BEFORE){
 						$aspect['o']->before(array('c'=>$c,'m'=>$m,'a'=>$a));
 					} else if ($stage === self :: AFTER){
-						$aspect['o']->after(array('c'=>$c,'m'=>$m,'a'=>$a));	
+						$aspect['o']->after(array('c'=>$c,'m'=>$m,'a'=>$a,'r'=>$r));	
 					}
 				}
 			}
@@ -113,7 +113,7 @@ class AOPObject extends Object{
 		$c = get_class($this->_instance);
 		AOPResolve :: execute(AOPResolve :: BEFORE,$c,$method,$argument);
         $return = call_user_func_array($callBack, $argument);
-		AOPResolve :: execute(AOPResolve :: AFTER,$c,$method,$argument);
+		AOPResolve :: execute(AOPResolve :: AFTER,$c,$method,$argument,$return);
 		return $return;
 	}
 	
