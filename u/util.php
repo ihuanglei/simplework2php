@@ -157,7 +157,11 @@ final class Util extends Object{
 			trigger_error("class $className was not found",E_USER_ERROR);
 		}
 
-		$object = new AOPObject(new $className);
+		$object = self::newObject(new $className);
+	}
+
+	public static function newObject($className){
+		return new AOPObject(new $className);
 	}
 
 	/**
